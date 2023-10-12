@@ -2,7 +2,7 @@
 
 use App\Models\Lens;
 
-function checkStockExists($request)
+function checkStockExists($request, $id)
 {
     $axis = $request->axis;
     $sph = [$request->sph, $request->sph + 10];
@@ -17,6 +17,8 @@ function checkStockExists($request)
         default:
             $axis = $axis;
     endswitch;
-    $products = Lens::where('coating_id', $request->coating_id)->where('type_id', $request->type_id)->where('material_id', $request->material_id)->whereIn('axis', $axis)->whereIn('sph', $sph)->whereIn('cyl', $cyl)->get();
-    return $products;
+    $products = Lens::where('coating_id', $request->coating_id)->where('type_id', $request->type_id)->where('material_id', $request->material_id)->whereIn('axis', $axis)->whereIn('sph', $sph)->whereIn('cyl', $cyl)->when($id > 0, function ($q) use ($id) {
+        return $q->where('id', $id);
+    })->get();
+    return ($id > 0 && count($products) == 1) ? collect() : $products;
 }

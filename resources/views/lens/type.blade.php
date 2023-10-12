@@ -38,7 +38,6 @@
                     </form>
                 </div>
                 <div class="card-body p-4 table-responsive">
-                    @include("sections.message")
                     <table id="dataTbl" class="table table-striped table-hover align-middle table-sm">
                         <thead>
                             <tr>

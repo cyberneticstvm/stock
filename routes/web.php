@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HelperController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LensController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/stock/tracking/type', [LensController::class, 'createtype'])->name('stock.tracking.create.type');
     Route::post('/stock/tracking/type', [LensController::class, 'storetype'])->name('stock.tracking.save.type');
+
+    Route::get('/location', [HelperController::class, 'createLocation'])->name('create.location');
+    Route::post('/location', [HelperController::class, 'saveLocation'])->name('save.location');
+
+    Route::get('/user', [HelperController::class, 'createUser'])->name('create.user');
+    Route::post('/user', [HelperController::class, 'saveUser'])->name('save.user');
 });
 
 require __DIR__ . '/auth.php';

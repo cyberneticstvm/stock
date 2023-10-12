@@ -110,7 +110,7 @@ class LensController extends Controller
             'type_id' => 'required',
         ]);
         try {
-            $products = checkStockExists($request);
+            $products = checkStockExists($request, $id = 0);
             if (!$products->isEmpty())
                 return redirect()->back()->with("error", "Product exists!")->withInput($request->all());
             else
@@ -146,7 +146,7 @@ class LensController extends Controller
             'type_id' => 'required',
         ]);
         try {
-            $products = checkStockExists($request);
+            $products = checkStockExists($request, $id = 0);
             if ($products->isEmpty())
                 return redirect()->back()->with("error", "Product not found!")->withInput($request->all());
             else
@@ -188,7 +188,7 @@ class LensController extends Controller
             'type_id' => 'required',
         ]);
         try {
-            $products = checkStockExists($request);
+            $products = checkStockExists($request, $id);
             if (!$products->isEmpty())
                 return redirect()->back()->with("error", "Product exists!")->withInput($request->all());
             else
