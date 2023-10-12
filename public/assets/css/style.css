@@ -1,0 +1,10 @@
+.navbar>.container-fluid{
+    display: inline !important;
+}
+.form-control-lg, .form-control{
+    height: 50px !important;
+    border: 1px solid #000;
+}
+.form-control:focus{
+    border: 1px solid #000;
+}
