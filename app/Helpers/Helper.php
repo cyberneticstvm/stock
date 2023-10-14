@@ -33,7 +33,7 @@ function checkStockExists($request, $id)
         return $q->whereIn('sph', $sph);
     })->when($request->cyl != '' || $request->cyl != 0, function ($q) use ($cyl) {
         return $q->whereIn('cyl', $cyl);
-    })->when($spherical != '', function ($q) use ($spherical) {
+    })->when($spherical != '' && $cylinder != '', function ($q) use ($spherical) {
         return $q->WhereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)");
     })->when($request->axis != '' || $request->axis != 0, function ($q) use ($axis) {
         return $q->whereIn('axis', $axis);
