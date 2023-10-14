@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\Lens;
+use Illuminate\Support\Facades\DB;
 
 function checkStockExists($request, $id)
 {
     $axis = $request->axis;
+    $spherical = $request->sph;
     $sph = [$request->sph, $request->sph + 10];
     $cyl = [$request->cyl, 0 - $request->cyl];
     switch ($axis):
@@ -15,7 +17,7 @@ function checkStockExists($request, $id)
             $axis = [$axis, $axis - 90];
             break;
         default:
-            $axis = $axis;
+            $axis = [$axis];
     endswitch;
     /*$products = Lens::where('coating_id', $request->coating_id)->where('type_id', $request->type_id)->where('material_id', $request->material_id)->whereIn('axis', $axis)->whereIn('sph', $sph)->whereIn('cyl', $cyl)->when($id > 0, function ($q) use ($id) {
         return $q->where('id', $id);
@@ -26,12 +28,12 @@ function checkStockExists($request, $id)
         return $q->where('type_id', $request->type_id);
     })->when($request->material_id != '', function ($q) use ($request) {
         return $q->where('material_id', $request->material_id);
-    })->when($request->sph != '', function ($q) use ($sph) {
-        return $q->where('sph', $sph);
-    })->when($request->cyl != '', function ($q) use ($cyl) {
-        return $q->where('cyl', $cyl);
-    })->when($request->axis != '', function ($q) use ($axis) {
-        return $q->where('axis', $axis);
+    })->when($request->sph != '' || $request->sph != 0, function ($q) use ($sph, $spherical) {
+        return $q->whereIn('sph', $sph)->orWhereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)");
+    })->when($request->cyl != '' || $request->cyl != 0, function ($q) use ($cyl) {
+        return $q->whereIn('cyl', $cyl);
+    })->when($request->axis != '' || $request->axis != 0, function ($q) use ($axis) {
+        return $q->whereIn('axis', $axis);
     })->get();
     return ($id > 0 && count($products) == 1) ? collect() : $products;
 }
