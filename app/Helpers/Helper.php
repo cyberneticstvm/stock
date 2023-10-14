@@ -34,11 +34,14 @@ function checkStockExists($request, $id)
     })->when($request->cyl != '' || $request->cyl != 0, function ($q) use ($cyl) {
         return $q->whereIn('cyl', $cyl);
     })->when($spherical != '' && $cylinder != '', function ($q) use ($spherical) {
-        return $q->WhereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)");
+        return $q->whereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)");
     })->when($request->axis != '' || $request->axis != 0, function ($q) use ($axis) {
         return $q->whereIn('axis', $axis);
     })->get();
-    dd($products);
-    die;
+    /*$data = DB::table('lenses')->when($spherical != '' && $cylinder != '', function ($q) use ($spherical, $cylinder) {
+        $q->selectRaw("CAST($spherical AS DECIMAL(4,2)) AS spherical, CAST($cylinder AS DECIMAL(4,2)) AS cylinder, CAST(sph AS DECIMAL(4,2)) AS sph, CAST(sph AS DECIMAL(4,2)) AS cyl, CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)) AS val")->whereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)");
+    })->get();
+    dd($data);
+    die;*/
     return ($id > 0 && count($products) == 1) ? collect() : $products;
 }
