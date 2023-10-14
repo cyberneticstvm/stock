@@ -7,6 +7,7 @@ function checkStockExists($request, $id)
 {
     $axis = $request->axis;
     $spherical = $request->sph;
+    $cylinder = $request->cyl;
     $sph = [$request->sph, number_format($request->sph, 2)];
     $cyl = [$request->cyl, number_format(0 - $request->cyl, 2)];
     switch ($axis):
@@ -25,8 +26,8 @@ function checkStockExists($request, $id)
         return $q->where('type_id', $request->type_id);
     })->when($request->material_id != '', function ($q) use ($request) {
         return $q->where('material_id', $request->material_id);
-    })->when($request->sph != '' && $request->cyl != '', function ($q) use ($spherical, $sph, $cyl) {
-        return $q->whereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)")->whereIn('sph', $sph)->whereIn('cyl', $cyl);
+    })->when($request->sph != '' && $request->cyl != '', function ($q) use ($spherical, $cylinder, $sph, $cyl) {
+        return $q->whereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)")->whereIn('sph', $sph)->whereIn('cyl', $cyl)->orWhere('sph', $spherical)->orWhere('cyl', $cylinder);
     })->when($request->sph != '' && $request->cyl == '', function ($q) use ($sph) {
         return $q->whereIn('sph', $sph);
     })->when($request->sph == '' && $request->cyl != '', function ($q) use ($cyl) {
