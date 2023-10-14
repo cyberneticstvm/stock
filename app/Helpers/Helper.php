@@ -7,7 +7,7 @@ function checkStockExists($request, $id)
 {
     $axis = $request->axis;
     $spherical = $request->sph;
-    $sph = [$request->sph];
+    $sph = [$request->sph, number_format($request->sph, 2)];
     $cyl = [$request->cyl, number_format(0 - $request->cyl, 2)];
     switch ($axis):
         case $axis <= 90:
