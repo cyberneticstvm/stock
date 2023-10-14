@@ -25,7 +25,7 @@ function checkStockExists($request, $id)
         return $q->where('type_id', $request->type_id);
     })->when($request->material_id != '', function ($q) use ($request) {
         return $q->where('material_id', $request->material_id);
-    })->when($request->sph != '' && $request->cyl != '', function ($q) use ($sph, $cyl, $spherical) {
+    })->when($request->sph != '' && $request->cyl != '', function ($q) use ($spherical) {
         return $q->whereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)");
     })->when($request->sph != '' && $request->cyl == '', function ($q) use ($sph) {
         return $q->whereIn('sph', $sph);
