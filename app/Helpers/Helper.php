@@ -29,9 +29,9 @@ function checkStockExists($request, $id)
     })->when($request->sph != '' && $request->cyl != '', function ($q) use ($spherical, $cylinder, $sph, $cyl) {
         return $q->whereRaw("IF($spherical, CAST($spherical AS DECIMAL(4,2)) = CAST(sph AS DECIMAL(4,2))+CAST(cyl AS DECIMAL(4,2)), 1)")->orWhereIn('sph', $sph)->whereIn('cyl', $cyl)->orWhere('sph', $spherical)->where('cyl', $cylinder);
     })->when($request->sph != '' && $request->cyl == '', function ($q) use ($sph) {
-        return $q->whereIn('sph', $sph)->where('cyl', '=', '')->orWhereNull('cyl');
+        return $q->whereIn('sph', $sph); //->where('cyl', '=', '')->orWhereNull('cyl');
     })->when($request->sph == '' && $request->cyl != '', function ($q) use ($cyl) {
-        return $q->whereIn('cyl', $cyl)->where('sph', '=', '')->orWhereNull('sph');
+        return $q->whereIn('cyl', $cyl); //->where('sph', '=', '')->orWhereNull('sph');
     })->when($request->axis != '' || $request->axis != 0, function ($q) use ($axis) {
         return $q->whereIn('axis', $axis);
     })->get();
