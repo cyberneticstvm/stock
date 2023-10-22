@@ -10,6 +10,7 @@ function checkStockExists($request, $id)
     $cylinder = $request->cyl;
     $sph = [$request->sph, number_format($request->sph, 2)];
     $cyl = [$request->cyl, number_format(0 - $request->cyl, 2)];
+    $add = [$request->add];
     switch ($axis):
         case $axis <= 90:
             $axis = [$axis, $axis + 90];
@@ -32,8 +33,10 @@ function checkStockExists($request, $id)
         return $q->whereIn('sph', $sph)->whereNull('cyl')->orwhere('cyl', 0);
     })->when($request->sph == '' && $request->cyl != '', function ($q) use ($cyl, $cylinder) {
         return $q->whereIn('cyl', $cyl)->whereNull('sph')->orWhere('sph', number_format(0 - $cylinder, 2))->orWhere('sph', 0);
-    })->when($request->axis != '' || $request->axis != 0, function ($q) use ($axis) {
+    })->when($request->axis != '', function ($q) use ($axis) {
         return $q->whereIn('axis', $axis);
+    })->when($request->add != '', function ($q) use ($add) {
+        return $q->whereIn('add', $add);
     })->get();
     return ($id > 0 && count($products) == 1) ? collect() : $products;
 }
