@@ -31,7 +31,7 @@ function checkStockExists($request, $id)
     })->when($request->sph != '' && $request->cyl == '', function ($q) use ($sph) {
         return $q->whereIn('sph', $sph);
     })->when($request->sph == '' && $request->cyl != '', function ($q) use ($cyl, $cylinder) {
-        return $q->whereIn('cyl', $cyl)->whereIsNull('sph')->orWhere('sph', number_format(0 - $cylinder, 2));
+        return $q->whereIn('cyl', $cyl)->whereNull('sph')->orWhere('sph', number_format(0 - $cylinder, 2));
     })->when($request->axis != '' || $request->axis != 0, function ($q) use ($axis) {
         return $q->whereIn('axis', $axis);
     })->get();
