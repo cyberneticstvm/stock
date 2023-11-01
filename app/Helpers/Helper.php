@@ -36,7 +36,7 @@ function checkStockExists($request, $id)
     })->when($request->sph != '' && $request->cyl == '', function ($q) use ($sph) {
         return $q->whereIn('sph', $sph)->whereNull('cyl')->orwhere('cyl', 0);
     })->when($request->sph == '' && $request->cyl != '', function ($q) use ($cyl, $cylinder) {
-        return $q->whereIn('cyl', $cyl)->whereNull('sph')->orWhere('sph', number_format(0 - $cylinder, 2))->orWhere('sph', 0);
+        return $q->whereIn('cyl', $cyl)->where('sph', number_format(0 - $cylinder, 2))->orWhere('sph', 0)->orWhereNull('sph');
     })->orderByDesc('add')->get();
     return ($id > 0 && count($products) == 1) ? collect() : $products;
 }
