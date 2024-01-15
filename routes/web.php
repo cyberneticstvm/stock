@@ -52,6 +52,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/user', [HelperController::class, 'createUser'])->name('create.user');
     Route::post('/user', [HelperController::class, 'saveUser'])->name('save.user');
+    Route::get('/user/edit/{id}', [HelperController::class, 'editUser'])->name('edit.user');
+    Route::post('/user/edit/{id}', [HelperController::class, 'updateUser'])->name('update.user');
+    Route::delete('/user/delete/{id}', [HelperController::class, 'deleteUser'])->name('delete.user');
 });
 
 require __DIR__ . '/auth.php';

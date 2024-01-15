@@ -5,8 +5,8 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-auto">
-                <h1 class="fs-4 mt-1 mb-0">Create User</h1>
-                <small class="text-muted">User / Create User</small>
+                <h1 class="fs-4 mt-1 mb-0">Update User</h1>
+                <small class="text-muted">User / Update User</small>
             </div>
         </div>
     </div>
@@ -19,26 +19,26 @@
             <div class="card mb-2">
                 <div class="card-body p-4">
                     @include("sections.message")
-                    <form action="{{ route('save.user') }}" method="post">
+                    <form action="{{ route('update.user', $user->id) }}" method="post">
                         @csrf
                         <div class="row g-4">
                             <div class="col-sm-3">
                                 <label class="form-label req">Full Name</label>
-                                <input type="text" value="{{ old('name') }}" name="name" class="form-control form-control-lg" placeholder="Full Name">
+                                <input type="text" value="{{ $user->name }}" name="name" class="form-control form-control-lg" placeholder="Full Name">
                                 @error('name')
                                 <small class="text-danger">{{ $errors->first('name') }}</small>
                                 @enderror
                             </div>
                             <div class="col-sm-3">
                                 <label class="form-label req">Username</label>
-                                <input type="text" value="{{ old('username') }}" name="username" class="form-control form-control-lg" placeholder="Userame">
+                                <input type="text" value="{{ $user->username }}" name="username" class="form-control form-control-lg" placeholder="Userame">
                                 @error('username')
                                 <small class="text-danger">{{ $errors->first('username') }}</small>
                                 @enderror
                             </div>
                             <div class="col-sm-3">
                                 <label class="form-label req">Email</label>
-                                <input type="email" value="{{ old('email') }}" name="email" class="form-control form-control-lg" placeholder="Email">
+                                <input type="email" value="{{ $user->email }}" name="email" class="form-control form-control-lg" placeholder="Email">
                                 @error('email')
                                 <small class="text-danger">{{ $errors->first('email') }}</small>
                                 @enderror
@@ -46,9 +46,9 @@
                             <div class="col-sm-2">
                                 <label class="form-label req">Role</label>
                                 <select class="form-control form-control-lg select2" name="role">
-                                    <option value="admin">Admin</option>
-                                    <option value="manager">Manager</option>
-                                    <option value="staff">Staff</option>
+                                    <option value="admin" {{ ($user->role == 'admin') ? 'selected' : '' }}>Admin</option>
+                                    <option value="manager" {{ ($user->role == 'manager') ? 'selected' : '' }}>Manager</option>
+                                    <option value="staff" {{ ($user->role == 'staff') ? 'selected' : '' }}>Staff</option>
                                 </select>
                                 @error('role')
                                 <small class="text-danger">{{ $errors->first('role') }}</small>
@@ -64,45 +64,10 @@
                             <div class="col-sm-12 text-end">
                                 <button type="button" onClick="history.back()" class="btn btn-danger">Cancel</button>
                                 <button type="reset" class="btn btn-warning">Reset</button>
-                                <button type="submit" class="btn btn-primary btn-submit">Save</button>
+                                <button type="submit" class="btn btn-primary btn-submit">Update</button>
                             </div>
                         </div>
                     </form>
-                </div>
-                <div class="card-body p-4 table-responsive">
-                    <table id="dataTbl" class="table table-striped table-hover align-middle table-sm">
-                        <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <th>Full Name</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($users as $key => $user)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->username }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
-                                <td class="text-center"><a href="{{ route('edit.user', encrypt($user->id)) }}"><i class="fa fa-pencil text-warning"></i></a></td>
-                                <td class="text-center">
-                                    <form method="post" action="{{ route('delete.user', encrypt($user->id)) }}">
-                                        @csrf
-                                        @method("DELETE")
-                                        <button type="submit" class="border no-border" onclick="javascript: return confirm('Are you sure want to delete this record?');"><i class="fa fa-trash text-danger"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @empty
-                            @endforelse
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>

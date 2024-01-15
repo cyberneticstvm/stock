@@ -48,4 +48,31 @@ class HelperController extends Controller
         User::create($input);
         return redirect()->back()->with("success", "User created successfully!");
     }
+
+    public function editUser(string $id)
+    {
+        $user = User::findOrFail(decrypt($id));
+        return view('user.edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, string $id)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'username' => 'required|unique:users,username,' . $id,
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required',
+        ]);
+        $input = $request->all();
+        $user = User::findOrFail($id);
+        $input['password'] = ($request->password) ? Hash::make($request->password) : $user->getOriginal('password');
+        $user->update($input);
+        return redirect()->route('create.user')->with("success", "User updated successfully!");
+    }
+
+    public function deleteUser(string $id)
+    {
+        User::findOrFail(decrypt($id))->delete();
+        return redirect()->route('create.user')->with("success", "User deleted successfully!");
+    }
 }
